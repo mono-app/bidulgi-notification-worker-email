@@ -1,5 +1,5 @@
 {
-  "name": "mono-bidulgi-work-manager",
+  "name": "mono-bidulgi-notification-worker-email",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
