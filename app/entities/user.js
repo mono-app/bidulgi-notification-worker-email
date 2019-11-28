@@ -1,4 +1,9 @@
 const CustomError = require("@app/entities/error");
+const Email = require("@app/entities/email");
+const PhoneNumber = require("@app/entities/phoneNumber");
+const ApplicationInformation = require("@app/entities/applicationInformation");
+const PersonalInformation = require("@app/entities/personalInformation");
+const Password = require("@app/entities/password");
 
 class User{
   // _id: string;
@@ -35,6 +40,7 @@ class User{
    */
   static fromSnapshot(documentSnapshot){
     const data = documentSnapshot.data();
+    console.log(data)
     const user = new User(documentSnapshot.id, data.email, data.isCompleteSetup)
     
     user.creationTime = data.creationTime
@@ -52,7 +58,7 @@ class User{
         applicationInformation.profilePicture = new Image(downloadUrl, storagePath)
         user.profilePicture = downloadUrl
       }catch(err){
-        user.profilePicture = HelperAPI.getDefaultProfilePic(nickName)
+        user.profilePicture = ""
       }
       user.applicationInformation = applicationInformation
       const givenName = data.personalInformation.givenName
