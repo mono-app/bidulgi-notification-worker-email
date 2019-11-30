@@ -22,7 +22,6 @@ async function receive(){
     ch.consume("email.queue", (msg) => {
       // do send notification to mono
       const notification = JSON.parse(msg.content)
-      console.log("RECEIVE: ", notification)
       NotificationAPI.sendEmail(notification)
     })
 

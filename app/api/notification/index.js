@@ -4,6 +4,7 @@ const uuid = require("uuid/v4");
 const moment = require("moment");
 const DatabaseAPI = require("@app/api/database");
 const UserAPI = require("@app/api/user")
+const EmailAPI = require("@app/api/email")
 
 class NotificationAPI{
 
@@ -144,7 +145,14 @@ class NotificationAPI{
    * @param {Notification} notification 
    */
   static async sendEmail(notification){
-   
+    try{
+      await EmailAPI.sendEmail(notification.smtp.host, notification.smtp.port, notification.smtp.username, notification.smtp.password, 
+        notification.recipient.id, notification.title, notification.content)
+    }catch(err){
+
+      throw err
+    }
+    
   }
 
 }
