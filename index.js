@@ -23,6 +23,8 @@ async function receive(){
       // do send notification to mono
       const notification = JSON.parse(msg.content)
       NotificationAPI.sendEmail(notification)
+    }, {
+      noAck: true
     })
 
   }catch(err){

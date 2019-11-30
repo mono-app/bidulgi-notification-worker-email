@@ -102,10 +102,11 @@ class NotificationAPI{
    * @param {string} notificationId 
    */
   static async updateStatusNotificationById(notificationId, status){
+    const serverSentTime = (status===StatusUtils.SENT)? moment().unix()  : null
     return await DatabaseAPI.query(async (client) => {
       return await client.query(`UPDATE notifications 
-      SET "status" = '${status}' 
-      WHERE "id" = $1`, [ notificationId ]);
+      SET "status" = '${status}', "serverSentTime" = $1 
+      WHERE "id" = $2`, [ serverSentTime, notificationId ]);
     })
   }
 
@@ -145,14 +146,16 @@ class NotificationAPI{
    * @param {Notification} notification 
    */
   static async sendEmail(notification){
-    try{
-      await EmailAPI.sendEmail(notification.smtp.host, notification.smtp.port, notification.smtp.username, notification.smtp.password, 
-        notification.recipient.id, notification.title, notification.content)
-    }catch(err){
-
-      throw err
-    }
-    
+    EmailAPI.sendEmail(notification.smtp.host, notification.smtp.port, notification.smtp.username, notification.smtp.password,notification.recipient.id, notification.title, notification.content, function(){
+      if(err) {
+        NotificationAPI.updateStatusNotificationById(notification.id, StatusUtils.FAILED)
+        console.log(err)
+        throw err
+      }else {
+        NotificationAPI.updateStatusNotificationById(notification.id, StatusUtils.SENT)
+        console.log(info)
+      }
+    })
   }
 
 }

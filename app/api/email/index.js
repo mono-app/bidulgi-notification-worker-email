@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 
 class EmailAPI {
-  async static sendEmail(smtpHost, smtpPort, smtpUsername, smtpPassword, recipientEmail, title, content){
+  static sendEmail(smtpHost, smtpPort, smtpUsername, smtpPassword, recipientEmail, title, content, resultFunc){
     var transporter = nodemailer.createTransport({
       host: smtpHost,
       port: smtpPort,
@@ -18,13 +18,9 @@ class EmailAPI {
       html: content// plain text body
     };
 
-    try{
-      const info = await transporter.sendMail(mailOptions)
-      console.log(info)
-    }catch(err){
-      throw new CustomError(err.code, err.message)
-    }
-   
+    transporter.sendMail(mailOptions, function(err, info){
+      resultFunc(err, info)
+    })
   }
 }
 
