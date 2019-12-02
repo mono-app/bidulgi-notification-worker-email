@@ -130,10 +130,10 @@ class NotificationAPI{
   static async pushNotification(notification){
     const extraData = (notification.extraData)? JSON.parse(notification.extraData): null
     const channelId = (extraData.channel)? extraData.channel.id : null
-    const user = UserAPI.getDetailById(notification.receiver.id)
+    const messagingToken = UserAPI.getMessagingTokenById(notification.receiver.id)
 
     message = {
-      token: user.tokenInformation.messagingToken,
+      token: messagingToken,
       android: { notification: { channelId }, priority: "high" },
       data: extraData,
       notification: { title: notification.title, body: notification.content }
